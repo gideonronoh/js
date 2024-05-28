@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout Example</title>
+</head>
+<body>
+    <button id="logoutButton">Logout</button>
+
+    <script>
+        async function logout() {
+            const url = '/logout/';  // Replace with your logout endpoint
+            const headers = {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken() // If you need to include a CSRF token
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: headers,
+                });
+
+                if (response.ok) {
+                    console.log('Logout successful');
+                    window.location.href = '/login/'; // Redirect to the login page
+                } else {
+                    console.error('Logout failed:', response.status);
+                }
+            } catch (error) {
+                console.error('An error occurred:', error);
+            }
+        }
+
+        function getCSRFToken() {
+            // Function to get CSRF token from cookies or meta tags
+            // Example for Django CSRF token in cookies:
+            const name = 'csrftoken';
+            const cookieValue = document.cookie.split('; ').find(row => row.startsWith(name)).split('=')[1];
+            return cookieValue;
+        }
+
+        document.getElementById('logoutButton').addEventListener('click', logout);
+    </script>
+</body>
+</html>
